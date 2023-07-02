@@ -40,7 +40,7 @@ with open('output.csv', 'w') as file:
         writer.writerow({'Name': name , 'Price': data['price'], 'Discount': data['discount']})
 
 
-
+driver.quit()
 
 
 
