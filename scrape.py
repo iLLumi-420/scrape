@@ -22,7 +22,7 @@ def get_food_items():
             writer = csv.writer(file)
 
             if page == 1:
-                writer.writerow(['value', 'title','url','order', 'id', 'price'])
+                writer.writerow(['value', 'title','url','order', 'id'])
 
             for item in filter_items:
                 options = item['options'] if 'options' in item else []
@@ -30,10 +30,9 @@ def get_food_items():
                     value = option['value']
                     title = option['title']
                     order = option['order']
-                    price = option['price'] if 'price' in option else ''
                     url = option['url'] if 'url' in option else ''
                     id_ = option['id']  if 'id' in option else ''
-                    writer.writerow([value, title,url, order, id_, price])
+                    writer.writerow([value, title,url, order, id_])
         
         
         if page == last_page:
