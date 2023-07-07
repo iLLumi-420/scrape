@@ -14,11 +14,14 @@ def extract_unit_from_title(title):
         return None, title.strip()
 
 
+items = {}
+
 def output_title_and_price():
 
     search_term = 'food'
     page = 1
     last_page = 20
+
   
     with open('./csv-files/title_price.csv', 'w') as file:
         writer = csv.DictWriter(file, fieldnames=['Title', 'Price'])
@@ -49,26 +52,27 @@ def output_title_and_price():
 
             
 
-def get_titles_and_prices():
-    titles = []
-    prices = []
+def extract_products():
+    product_list = []
     with open('./csv-files/title_price.csv', 'r') as file:
         reader = csv.DictReader(file)
         for row in reader:
-            titles.append(row['Title'])
-
-            prices.append(row['Price'])
-    return titles, prices
+            product_list.append(row)
+    return product_list
 
 
 
-def output_with_unit():
-    titles, prices = get_titles_and_prices()
+def transform_product():
+    product_list = extract_products()
     with open('./csv-files/unit.csv', 'w') as file:
         writer = csv.DictWriter(file, fieldnames=['Title', 'Unit', 'Price'])
         writer.writeheader()
-        for title, price in zip(titles, prices):
+        for product in product_list:
+            title = product['Title']
+            price = product['Price']
+            print(title)
             title_without_unit, unit = extract_unit_from_title(title)
+            print(title_without_unit)
             writer.writerow({'Title': title_without_unit, 'Unit': unit, 'Price': price})
 
     
@@ -76,7 +80,7 @@ def output_with_unit():
 
 if __name__ == '__main__':
     output_title_and_price()
-    output_with_unit()
+    transform_product()
 
 
 
