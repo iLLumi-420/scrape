@@ -3,36 +3,16 @@ import csv
 import re
 from collections import Counter
 
-def generate_ngrams(text, n):
-    words = [word for word in re.split(r"\s+", text.strip())]
-    temp = zip(*[words[i:] for i in range(0, n)])
-    ans = [' '.join(ngram) for ngram in temp]
-    return ans
-
-def get_all_ngrams(array):
-    return [item for list in array for item in list]
-
-def extract_unit_from_title(title):
-    pattern = r'(\d+\s*\w+)'
-    match = re.search(pattern, title)
-    if match:
-        unit = match.group(1)
-        title_without_unit = title.replace(unit, '').strip()
-        return unit.strip(), title_without_unit
-    else:
-        return None, title.strip()
 
 
-def get_food_item_title():
+def output_title_and_price():
 
     search_term = 'food'
     page = 1
     last_page = 20
-
-    titles = []
-    
-    with open('output.csv', 'w') as file:
-        writer = csv.DictWriter(file, fieldnames=['Title', 'Unit'])
+  
+    with open('title_price.csv', 'w') as file:
+        writer = csv.DictWriter(file, fieldnames=['Title', 'Price'])
         writer.writeheader()
 
         while page <= last_page:
@@ -50,37 +30,52 @@ def get_food_item_title():
 
                 for product in products:
                     title = product['name']
-                    titles.append(title)
-                    unit, title_without_unit = extract_unit_from_title(title)
-
-                    writer.writerow({'Title': title_without_unit, 'Unit': unit})
+                    price = product['price']
+                    try:
+                        writer.writerow({'Title': title, 'Price': price})
+                    except:
+                        print('Error..')
 
             page += 1
 
+            
+
+def get_titles():
+    titles = []
+    with open('title_price.csv', 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            titles.append(row['Title'])
+    print(titles)
     return titles
 
+def extract_unit_from_title(title):
+    pattern = r'(\d+\s*\w+)'
+    match = re.search(pattern, title)
+    if match:
+        unit = match.group(1)
+        title_without_unit = title.replace(unit, '').strip()
+        return title_without_unit, unit.strip(), 
+    else:
+        return None, title.strip()
 
 
-get_food_item_title()
+def output_with_unit():
+    titles = get_titles()
+    with open('unit.csv', 'w') as file:
+        writer = csv.DictWriter(file, fieldnames=['Title', 'Unit'])
+        writer.writeheader()
+        for item in titles:
+            title, unit = extract_unit_from_title(item)
+            writer.writerow({'Title': title, 'Unit': unit})
 
-# unigrams = [generate_ngrams(title, 1) for title in titles ]
-# all_unigrams = get_all_ngrams(unigrams)
-
-# count_all_unigrams = Counter(all_unigrams)
-# most_frequent_unigram = [ngram for ngram, count in count_all_unigrams.most_common(30)]
-# print(most_frequent_unigram)
-
-
-
-
-
-# def check_for_units(title):
-#     for item in most_frequent_unigram:
-#         if item in title:
-#             print(item)
     
 
-# for title in titles:
-#     check_for_units(title)
+
+
+output_title_and_price()
+output_with_unit()
+
+
 
 
