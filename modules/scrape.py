@@ -49,24 +49,27 @@ def output_title_and_price():
 
             
 
-def get_titles():
+def get_titles_and_prices():
     titles = []
+    prices = []
     with open('./csv-files/title_price.csv', 'r') as file:
         reader = csv.DictReader(file)
         for row in reader:
             titles.append(row['Title'])
-    return titles
+
+            prices.append(row['Price'])
+    return titles, prices
 
 
 
 def output_with_unit():
-    titles = get_titles()
+    titles, prices = get_titles_and_prices()
     with open('./csv-files/unit.csv', 'w') as file:
-        writer = csv.DictWriter(file, fieldnames=['Title', 'Unit'])
+        writer = csv.DictWriter(file, fieldnames=['Title', 'Unit', 'Price'])
         writer.writeheader()
-        for item in titles:
-            title, unit = extract_unit_from_title(item)
-            writer.writerow({'Title': title, 'Unit': unit})
+        for title, price in zip(titles, prices):
+            title_without_unit, unit = extract_unit_from_title(title)
+            writer.writerow({'Title': title_without_unit, 'Unit': unit, 'Price': price})
 
     
 
