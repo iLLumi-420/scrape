@@ -1,8 +1,17 @@
 import requests
 import csv
 import re
-from collections import Counter
 
+
+def extract_unit_from_title(title):
+    pattern = r'(\d+\s*\w+)'
+    match = re.search(pattern, title)
+    if match:
+        unit = match.group(1)
+        title_without_unit = title.replace(unit, '').strip()
+        return title_without_unit, unit.strip(), 
+    else:
+        return None, title.strip()
 
 
 def output_title_and_price():
@@ -11,7 +20,7 @@ def output_title_and_price():
     page = 1
     last_page = 20
   
-    with open('title_price.csv', 'w') as file:
+    with open('./csv-files/title_price.csv', 'w') as file:
         writer = csv.DictWriter(file, fieldnames=['Title', 'Price'])
         writer.writeheader()
 
@@ -42,27 +51,17 @@ def output_title_and_price():
 
 def get_titles():
     titles = []
-    with open('title_price.csv', 'r') as file:
+    with open('./csv-files/title_price.csv', 'r') as file:
         reader = csv.DictReader(file)
         for row in reader:
             titles.append(row['Title'])
-    print(titles)
     return titles
 
-def extract_unit_from_title(title):
-    pattern = r'(\d+\s*\w+)'
-    match = re.search(pattern, title)
-    if match:
-        unit = match.group(1)
-        title_without_unit = title.replace(unit, '').strip()
-        return title_without_unit, unit.strip(), 
-    else:
-        return None, title.strip()
 
 
 def output_with_unit():
     titles = get_titles()
-    with open('unit.csv', 'w') as file:
+    with open('./csv-files/unit.csv', 'w') as file:
         writer = csv.DictWriter(file, fieldnames=['Title', 'Unit'])
         writer.writeheader()
         for item in titles:
@@ -72,9 +71,9 @@ def output_with_unit():
     
 
 
-
-output_title_and_price()
-output_with_unit()
+if __name__ == '__main__':
+    output_title_and_price()
+    output_with_unit()
 
 
 
