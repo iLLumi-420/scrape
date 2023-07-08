@@ -16,7 +16,7 @@ def extract_unit_from_title(title):
 
 items = {}
 
-def output_title_and_price():
+def extract_products():
 
     search_term = 'food'
     page = 1
@@ -52,7 +52,7 @@ def output_title_and_price():
 
             
 
-def extract_products():
+def load_raw_products():
     product_list = []
     with open('./csv-files/title_price.csv', 'r') as file:
         reader = csv.DictReader(file)
@@ -62,8 +62,8 @@ def extract_products():
 
 
 
-def transform_product():
-    product_list = extract_products()
+def transform_products():
+    product_list = load_raw_products()
     with open('./csv-files/unit.csv', 'w') as file:
         writer = csv.DictWriter(file, fieldnames=['Title', 'Unit', 'Price'])
         writer.writeheader()
@@ -79,8 +79,8 @@ def transform_product():
 
 
 if __name__ == '__main__':
-    output_title_and_price()
-    transform_product()
+    extract_products()
+    transform_products()
 
 
 
