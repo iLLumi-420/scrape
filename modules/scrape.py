@@ -3,6 +3,24 @@ import csv
 import re
 
 
+def convert_unit(unit):
+    unit = unit.strip().lower()
+    match = re.search(r'\d+', unit)
+
+    if not match:
+        return ''
+    number = match.group()
+
+    if 'kg' in unit:
+        return unit
+
+    if 'gm' or 'g' or 'gram' or 'gms' 'grams' in unit:
+            converted_number = str(float(number)/1000)
+            return converted_number + 'kg'
+    else:
+        return unit
+    
+    
 def extract_unit_from_title(title):
     pattern = r'(\d+\s*\w+)'
     match = re.search(pattern, title)
@@ -70,16 +88,15 @@ def transform_products():
         for product in product_list:
             title = product['Title']
             price = product['Price']
-            print(title)
             title_without_unit, unit = extract_unit_from_title(title)
-            print(title_without_unit)
-            writer.writerow({'Title': title_without_unit, 'Unit': unit, 'Price': price})
+            new_unit = convert_unit(unit)
+            writer.writerow({'Title': title_without_unit, 'Unit': new_unit, 'Price': price})
 
     
 
 
 if __name__ == '__main__':
-    extract_products()
+    # extract_products()
     transform_products()
 
 
