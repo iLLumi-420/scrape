@@ -34,9 +34,8 @@ def extract_unit(title):
 
 items = {}
 
-def extract_products():
+def extract_products(search_term):
 
-    search_term = 'food'
     page = 1
     last_page = 20
 
@@ -95,5 +94,5 @@ def transform_products():
 
 
 if __name__ == '__main__':
-    extract_products()
+    extract_products('food')
     transform_products()
