@@ -31,12 +31,13 @@ def test_transform_products():
     with open(unit_file_path, 'r') as file:
         reader = csv.DictReader(file)
 
-        transformed_count = sum(1 for row in reader)
+        transformed_count = 0
         
         for row in reader:
             title = row['Title']
             unit = row['Unit(grams)']
             price = row['Price(NRs)']
+            transformed_count += 1
 
             assert isinstance(title, str) , "Title is not a sting"
             assert len(title) > 0, "Empty string not valid"
