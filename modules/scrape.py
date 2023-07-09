@@ -34,15 +34,16 @@ def extract_unit(title):
 
 items = {}
 
-def extract_products(search_term):
+def extract_products(search_term, filename):
 
     page = 1
     last_page = 20
 
   
-    with open('./csv-files/title_price.csv', 'w') as file:
+    with open(filename, 'a+') as file:
         writer = csv.DictWriter(file, fieldnames=['Title', 'Price'])
-        writer.writeheader()
+        if file.tell() == 0:
+            writer.writeheader()
 
         while page <= last_page:
             url = f'https://www.daraz.com.np/catalog/?page={page}&q={search_term}&ajax=True'
@@ -69,9 +70,9 @@ def extract_products(search_term):
 
             
 
-def load_raw_products():
+def load_raw_products(filename):
     product_list = []
-    with open('./csv-files/title_price.csv', 'r') as file:
+    with open(filename, 'r') as file:
         reader = csv.DictReader(file)
         for row in reader:
             product_list.append(row)
@@ -79,9 +80,9 @@ def load_raw_products():
 
 
 
-def transform_products():
-    product_list = load_raw_products()
-    with open('./csv-files/unit.csv', 'w') as file:
+def transform_products(input_file, output_file):
+    product_list = load_raw_products(input_file)
+    with open(output_file, 'w') as file:
         writer = csv.DictWriter(file, fieldnames=['Title', 'Unit(grams)', 'Price(NRs)'])
         writer.writeheader()
         for product in product_list:
@@ -94,5 +95,6 @@ def transform_products():
 
 
 if __name__ == '__main__':
-    extract_products('food')
-    transform_products()
+    search_term = 'electronics'
+    extract_products('electronics', './csv-files/title_price.csv')
+    transform_products('./csv-files/title_price.csv', './csv-files/unit.csv')
