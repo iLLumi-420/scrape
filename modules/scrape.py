@@ -20,7 +20,7 @@ def convert_unit(unit):
         return None
     
     
-def extract_unit_from_title(title):
+def extract_unit(title):
     pattern = r'(\d+\s*[A-za-z]+)'
     matches = re.findall(pattern, title)
     if matches:
@@ -87,7 +87,7 @@ def transform_products():
         for product in product_list:
             title = product['Title']
             price = product['Price']
-            title_without_unit, unit = extract_unit_from_title(title)
+            title_without_unit, unit = extract_unit(title)
             writer.writerow({'Title': title_without_unit, 'Unit': unit, 'Price': price})
 
     
