@@ -83,13 +83,13 @@ def load_raw_products():
 def transform_products():
     product_list = load_raw_products()
     with open('./csv-files/unit.csv', 'w') as file:
-        writer = csv.DictWriter(file, fieldnames=['Title', 'Unit_in_grams', 'Price'])
+        writer = csv.DictWriter(file, fieldnames=['Title', 'Unit(grams)', 'Price(NRs)'])
         writer.writeheader()
         for product in product_list:
             title = product['Title']
             price = product['Price']
             title_without_unit, unit = extract_unit(title)
-            writer.writerow({'Title': title_without_unit, 'Unit_in_grams': unit, 'Price': price})
+            writer.writerow({'Title': title_without_unit, 'Unit(grams)': unit, 'Price(NRs)': price})
 
     
 
