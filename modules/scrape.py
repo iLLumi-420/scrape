@@ -8,28 +8,27 @@ def convert_unit(unit):
     match = re.search(r'\d+', unit)
 
     if not match:
-        return ''
+        return None
     number = match.group()
 
     if 'kg' in unit:
-        return unit
-
-    if 'gm' or 'g' or 'gram' or 'gms' 'grams' in unit:
-            converted_number = str(float(number)/1000)
-            return converted_number + 'kg'
+        converted_number = float(number) * 1000
+        return converted_number
+    elif 'gm' or 'g' or 'gram' or 'gms' 'grams' in unit:
+            return float(number)
     else:
-        return unit
+        return None
     
     
 def extract_unit_from_title(title):
-    pattern = r'(\d+\s*\w+)'
-    match = re.search(pattern, title)
-    if match:
-        unit = match.group(1)
+    pattern = r'(\d+\s*[A-za-z]+)'
+    matches = re.findall(pattern, title)
+    if matches:
+        unit = matches[-1]
         title_without_unit = title.replace(unit, '').strip()
-        return title_without_unit, unit.strip(), 
+        return title_without_unit, convert_unit(unit.strip())
     else:
-        return None, title.strip()
+        return title.strip(), None
 
 
 items = {}
@@ -89,14 +88,13 @@ def transform_products():
             title = product['Title']
             price = product['Price']
             title_without_unit, unit = extract_unit_from_title(title)
-            new_unit = convert_unit(unit)
-            writer.writerow({'Title': title_without_unit, 'Unit': new_unit, 'Price': price})
+            writer.writerow({'Title': title_without_unit, 'Unit': unit, 'Price': price})
 
     
 
 
 if __name__ == '__main__':
-    # extract_products()
+    extract_products()
     transform_products()
 
 
