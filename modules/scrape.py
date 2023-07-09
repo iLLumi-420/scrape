@@ -14,8 +14,9 @@ def convert_unit(unit):
     if 'kg' in unit:
         converted_number = float(number) * 1000
         return converted_number
-    elif 'gm' or 'g' or 'gram' or 'gms' 'grams' in unit:
-            return float(number)
+    
+    if 'gm' in unit or 'g' in unit or 'gram' in unit or 'gms' in unit or 'grams' in unit:
+        return float(number)
     else:
         return None
     
@@ -94,9 +95,5 @@ def transform_products():
 
 
 if __name__ == '__main__':
-    extract_products()
+    # extract_products()
     transform_products()
-
-
-
-
