@@ -1,6 +1,7 @@
 import requests
 import csv
 import re
+import os
 
 
 def convert_unit(unit):
@@ -34,13 +35,18 @@ def extract_unit(title):
 
 items = {}
 
-def extract_products(search_term, filename):
+def extract_products(search_term):
 
     page = 1
     last_page = 20
 
-  
-    with open(filename, 'a+') as file:
+    file_path = f'./csv-files/{search_term}.csv'
+
+    if os.path.exists(file_path):
+        print(f'Data for {search_term} already exists')
+        return
+    
+    with open(file_path, 'a+') as file:
         writer = csv.DictWriter(file, fieldnames=['Title', 'Price'])
         if file.tell() == 0:
             writer.writeheader()
@@ -70,9 +76,15 @@ def extract_products(search_term, filename):
 
             
 
-def load_raw_products(filename):
+def load_raw_products(search_term):
+
+    input_file = f'./csv-files/{search_term}.csv'
+    if not os.path.exists(input_file):
+        print('Data for search term {search_term} does not exist')
+        return []
+    
     product_list = []
-    with open(filename, 'r') as file:
+    with open(input_file, 'r') as file:
         reader = csv.DictReader(file)
         for row in reader:
             product_list.append(row)
@@ -80,8 +92,15 @@ def load_raw_products(filename):
 
 
 
-def transform_products(input_file, output_file):
-    product_list = load_raw_products(input_file)
+def transform_products(search_term):
+
+    product_list = load_raw_products(search_term)
+
+    output_file = f'./csv-files/unit_{search_term}.csv'
+    if os.path.exists(output_file):
+        print(f'Unit data for {search_term} has already been transformed and saved')
+        return
+    
     with open(output_file, 'w') as file:
         writer = csv.DictWriter(file, fieldnames=['Title', 'Unit(grams)', 'Price(NRs)'])
         writer.writeheader()
@@ -96,5 +115,5 @@ def transform_products(input_file, output_file):
 
 if __name__ == '__main__':
     search_term = 'electronics'
-    extract_products('electronics', './csv-files/title_price.csv')
-    transform_products('./csv-files/title_price.csv', './csv-files/unit.csv')
+    extract_products(search_term)
+    transform_products(search_term)
