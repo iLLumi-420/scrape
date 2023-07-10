@@ -4,6 +4,7 @@ import csv
 
 def test_extract_products():
     search_term = 'food'
+
     extract_products(search_term)
 
     file_path = f'./csv-files/{search_term}.csv'
@@ -11,6 +12,7 @@ def test_extract_products():
 
     with open(file_path, 'r') as file:
         reader = csv.DictReader(file)
+        
         
         for row in reader:
             title = row['Title']
@@ -44,12 +46,16 @@ def test_transform_products():
             assert unit is None or isinstance(unit, str) , "Invalid unit"
             assert isinstance(price, str), "Invalid price"
         
+        assert transformed_count > 0, "No data in unit file"
+        
     file_path = f'./csv-files/{search_term}.csv'
     with open(file_path, 'r') as file:
         reader = csv.DictReader(file)
         extracted_count = sum(1 for row in reader)
 
-        assert extracted_count == transformed_count, "Mismatch in row between extracted and transformed data"
+        assert extracted_count > 0 , "No data in extracted file"
+
+        extracted_count == transformed_count, "Mismatch in row between extracted and transformed data"
         
     
 if __name__ == '__main__':

@@ -40,39 +40,39 @@ def extract_products(search_term):
     page = 1
     last_page = 20
 
-    file_path = f'./csv-files/{search_term}.csv'
+    # file_path = f'./csv-files/{search_term}.csv'
 
-    if os.path.exists(file_path):
-        print(f'Data for {search_term} already exists')
-        return
+    # if os.path.exists(file_path):
+    #     print(f'Data for {search_term} already exists')
+    #     return
     
-    with open(file_path, 'a+') as file:
-        writer = csv.DictWriter(file, fieldnames=['Title', 'Price'])
-        if file.tell() == 0:
-            writer.writeheader()
+    # with open(file_path, 'a+') as file:
+    #     writer = csv.DictWriter(file, fieldnames=['Title', 'Price'])
+    #     if file.tell() == 0:
+    #         writer.writeheader()
 
-        while page <= last_page:
-            url = f'https://www.daraz.com.np/catalog/?page={page}&q={search_term}&ajax=True'
-            response = requests.get(url)
+    #     while page <= last_page:
+    #         url = f'https://www.daraz.com.np/catalog/?page={page}&q={search_term}&ajax=True'
+    #         response = requests.get(url)
 
-            if response.status_code != 200:
-                print(f'Error while getting data for page {page}')
-                return
+    #         if response.status_code != 200:
+    #             print(f'Error while getting data for page {page}')
+    #             return
 
-            data = response.json()
+    #         data = response.json()
 
-            if 'mods' in data and 'listItems' in data['mods']:
-                products = data['mods']['listItems']
+    #         if 'mods' in data and 'listItems' in data['mods']:
+    #             products = data['mods']['listItems']
 
-                for product in products:
-                    title = product['name']
-                    price = product['price']
-                    try:
-                        writer.writerow({'Title': title, 'Price': price})
-                    except:
-                        print('Error..')
+    #             for product in products:
+    #                 title = product['name']
+    #                 price = product['price']
+    #                 try:
+    #                     writer.writerow({'Title': title, 'Price': price})
+    #                 except:
+    #                     print('Error..')
 
-            page += 1
+    #         page += 1
 
             
 
