@@ -40,39 +40,42 @@ def extract_products(search_term):
     page = 1
     last_page = 20
 
-    # file_path = f'./csv-files/{search_term}.csv'
+    file_path = f'./csv-files/{search_term}.csv'
 
-    # if os.path.exists(file_path):
-    #     print(f'Data for {search_term} already exists')
-    #     return
-    
-    # with open(file_path, 'a+') as file:
-    #     writer = csv.DictWriter(file, fieldnames=['Title', 'Price'])
-    #     if file.tell() == 0:
-    #         writer.writeheader()
+    if os.path.exists(file_path):
+        return f'File for {search_term} already exists'
+        
+    else:
 
-    #     while page <= last_page:
-    #         url = f'https://www.daraz.com.np/catalog/?page={page}&q={search_term}&ajax=True'
-    #         response = requests.get(url)
+        with open(file_path, 'a+') as file:
+            writer = csv.DictWriter(file, fieldnames=['Title', 'Price'])
+            if file.tell() == 0:
+                writer.writeheader()
 
-    #         if response.status_code != 200:
-    #             print(f'Error while getting data for page {page}')
-    #             return
+            while page <= last_page:
+                url = f'https://www.daraz.com.np/catalog/?page={page}&q={search_term}&ajax=True'
+                response = requests.get(url)
 
-    #         data = response.json()
+                if response.status_code != 200:
+                    print(f'Error while getting data for page {page}')
+                    return
 
-    #         if 'mods' in data and 'listItems' in data['mods']:
-    #             products = data['mods']['listItems']
+                data = response.json()
 
-    #             for product in products:
-    #                 title = product['name']
-    #                 price = product['price']
-    #                 try:
-    #                     writer.writerow({'Title': title, 'Price': price})
-    #                 except:
-    #                     print('Error..')
+                if 'mods' in data and 'listItems' in data['mods']:
+                    products = data['mods']['listItems']
 
-    #         page += 1
+                    for product in products:
+                        title = product['name']
+                        price = product['price']
+                        try:
+                            writer.writerow({'Title': title, 'Price': price})
+                        except:
+                            print('Error..')
+
+                page += 1
+        
+        return f'Successfully created csv file for {search_term}'
 
             
 
@@ -98,17 +101,18 @@ def transform_products(search_term):
 
     output_file = f'./csv-files/unit_{search_term}.csv'
     if os.path.exists(output_file):
-        print(f'Unit data for {search_term} has already been transformed and saved')
-        return
-    
-    with open(output_file, 'w') as file:
-        writer = csv.DictWriter(file, fieldnames=['Title', 'Unit(grams)', 'Price(NRs)'])
-        writer.writeheader()
-        for product in product_list:
-            title = product['Title']
-            price = product['Price']
-            title_without_unit, unit = extract_unit(title)
-            writer.writerow({'Title': title_without_unit, 'Unit(grams)': unit, 'Price(NRs)': price})
+        return f'Unit data for {search_term} has already been transformed and saved'
+    else:
+        with open(output_file, 'w') as file:
+            writer = csv.DictWriter(file, fieldnames=['Title', 'Unit(grams)', 'Price(NRs)'])
+            writer.writeheader()
+            for product in product_list:
+                title = product['Title']
+                price = product['Price']
+                title_without_unit, unit = extract_unit(title)
+                writer.writerow({'Title': title_without_unit, 'Unit(grams)': unit, 'Price(NRs)': price})
+        
+        return f'Succesfully created unit file for {search_term}'
 
     
 

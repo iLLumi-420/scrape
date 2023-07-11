@@ -3,17 +3,25 @@ import os
 import csv
 
 def test_extract_products():
-    search_term = 'food'
-
-    extract_products(search_term)
+    search_term = 'foods'
 
     file_path = f'./csv-files/{search_term}.csv'
-    assert os.path.exists(file_path), "Extracted file doesnot exist"
+    if os.path.exists(file_path):
+        extract = extract_products(search_term)
+        expected_result = f'File for {search_term} already exists'
+
+        assert extract == expected_result
+
+    else:
+        extract = extract_products(search_term)
+        expected_result = f'Successfully created csv file for {search_term}'
+
+        assert extract == expected_result
+
 
     with open(file_path, 'r') as file:
         reader = csv.DictReader(file)
-        
-        
+                
         for row in reader:
             title = row['Title']
             price = row['Price']
@@ -24,11 +32,22 @@ def test_extract_products():
 
 
 def test_transform_products():
-    search_term = 'food'
-    transform_products(search_term)
+    search_term = 'foods'
 
     unit_file_path = f'./csv-files/unit_{search_term}.csv'
-    assert os.path.exists(unit_file_path), "Extracted file doesnot exist"
+
+    if os.path.exists(unit_file_path):
+        transform = transform_products(search_term)
+        expected_result = f'Unit data for {search_term} has already been transformed and saved'
+
+        assert transform == expected_result
+
+    else:
+        transform = transform_products(search_term)
+        expected_result == f'Succesfully created unit file for {search_term}'
+
+        assert transform == expected_result
+
 
     with open(unit_file_path, 'r') as file:
         reader = csv.DictReader(file)
