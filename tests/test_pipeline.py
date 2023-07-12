@@ -5,11 +5,13 @@ import csv
 def test_scrape():
     search_term = 'foods'
 
-    scrape(search_term)
-
     input_file = f'./csv-files/{search_term}.csv'
     unit_file = f'./csv-files/unit_{search_term}.csv'
 
+    if os.path.isfile(input_file):
+        os.remove(input_file)
+
+    scrape(search_term)
 
     with open(input_file, 'r') as file:
         reader = csv.DictReader(file)
@@ -43,17 +45,10 @@ def test_scrape():
             assert isinstance(price, str), "Invalid price"
 
     
-    assert input_count == transformed_count, "Mismatch in row between extracted and transformed data"
-        
-
-
-
-
-        
+    assert input_count == transformed_count, "Mismatch in row between extracted and transformed data"   
         
     
 if __name__ == '__main__':
-    search_term = 'foods'
-    test_scrape(search_term)
+    test_scrape()
 
 
