@@ -44,7 +44,7 @@ def test_transform_products():
 
     else:
         transform = transform_products(search_term)
-        expected_result == f'Succesfully created unit file for {search_term}'
+        expected_result = f'Succesfully created unit file for {search_term}'
 
         assert transform == expected_result
 
